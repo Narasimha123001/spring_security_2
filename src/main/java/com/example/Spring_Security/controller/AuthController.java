@@ -3,9 +3,8 @@ package com.example.Spring_Security.controller;
 
 import com.example.Spring_Security.entity.Role;
 import com.example.Spring_Security.entity.Users;
-import com.example.Spring_Security.repo.UserDetailsRepository;
+import com.example.Spring_Security.service.UserService;
 import com.example.Spring_Security.util.JWTUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -16,17 +15,30 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private UserDetailsRepository userDetailsRepository;
+//    @Autowired
+//    private UserDetailsRepository userDetailsRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private JWTUtil jwtUtil;
+
+    private final AuthenticationManager authenticationManager;
+
+
+    private final JWTUtil jwtUtil;
+
+
+    private final UserService userService;
+
+    public AuthController(PasswordEncoder passwordEncoder,
+                          AuthenticationManager authenticationManager,
+                          JWTUtil jwtUtil,
+                          UserService userService) {
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+        this.userService = userService;
+    }
 
     @PostMapping("/register")
     public String register(@RequestBody Users user){
@@ -34,7 +46,8 @@ public class AuthController {
         if(user.getRole() == null){
             user.setRole(Role.USER);
         }
-        userDetailsRepository.save(user);
+        userService.save(user);
+      //  userDetailsRepository.save(user);
         return "User registered successfully";
     }
 
