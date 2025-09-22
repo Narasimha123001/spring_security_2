@@ -18,18 +18,15 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Data
 @Entity
-@Getter
-@Setter
 public class Users implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
-
     private String password;
-
     private String message;
+
     @Enumerated(EnumType.STRING)
     private Role  role;
 
